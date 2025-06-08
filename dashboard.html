@@ -1,0 +1,319 @@
+{% extends "base.html" %}
+
+{% block title %}Dashboard{% endblock %}
+{% block page_title %}Bem-vindo, {{ current_user.nome }}!{% endblock %}
+
+{% block content %}
+<div class="dashboard-container">
+    <!-- Estatísticas principais -->
+    <div class="stats-grid">
+        <div class="stat-card">
+            <div class="stat-icon orange">
+                <i class="fas fa-users"></i>
+            </div>
+            <div class="stat-value">{{ stats.total_clientes }}</div>
+            <div class="stat-label">Total de clientes</div>
+            <div class="stat-trend trend-up">
+                <i class="fas fa-arrow-up"></i>
+                12% mais que o trimestre passado
+            </div>
+        </div>
+        
+        <div class="stat-card">
+            <div class="stat-icon purple">
+                <i class="fas fa-box"></i>
+            </div>
+            <div class="stat-value">{{ stats.total_produtos }}</div>
+            <div class="stat-label">Total de produtos</div>
+            <div class="stat-trend trend-up">
+                <i class="fas fa-arrow-up"></i>
+                0.2% mais que o mês passado
+            </div>
+        </div>
+        
+        <div class="stat-card">
+            <div class="stat-icon blue">
+                <i class="fas fa-industry"></i>
+            </div>
+            <div class="stat-value">{{ stats.producoes_mes }}</div>
+            <div class="stat-label">Produções este mês</div>
+            <div class="stat-trend trend-up">
+                <i class="fas fa-arrow-up"></i>
+                4% mais que o mês passado
+            </div>
+        </div>
+        
+        <div class="stat-card">
+            <div class="stat-icon green">
+                <i class="fas fa-dollar-sign"></i>
+            </div>
+            <div class="stat-value">{{ "R$ {:,.2f}".format(stats.faturamento_mes).replace(',', 'X').replace('.', ',').replace('X', '.') }}</div>
+            <div class="stat-label">Faturamento este mês</div>
+            <div class="stat-trend trend-up">
+                <i class="fas fa-arrow-up"></i>
+                21% vs mês passado
+            </div>
+        </div>
+    </div>
+    
+    <!-- Cards de informações -->
+    <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 1.5rem; margin-top: 2rem;">
+        <!-- Produtos mais vendidos -->
+        <div class="card">
+            <div class="card-header">
+                <h3 class="card-title">Produtos mais vendidos</h3>
+                <button class="btn btn-outline">
+                    <i class="fas fa-ellipsis-h"></i>
+                </button>
+            </div>
+            
+            <div class="chart-container" style="height: 200px; display: flex; align-items: center; justify-content: center; background-color: #f9fafb; border-radius: 0.5rem;">
+                <div style="text-align: center; color: #6b7280;">
+                    <i class="fas fa-chart-pie" style="font-size: 3rem; margin-bottom: 1rem;"></i>
+                    <p>Gráfico de produtos mais vendidos</p>
+                    <p style="font-size: 0.875rem;">Dados serão carregados em breve</p>
+                </div>
+            </div>
+            
+            <div style="margin-top: 1rem;">
+                <div style="display: flex; justify-content: space-between; margin-bottom: 0.5rem;">
+                    <span style="font-size: 0.875rem; color: #6b7280;">Pendente</span>
+                    <span style="font-size: 0.875rem; font-weight: 600;">100</span>
+                </div>
+                <div style="display: flex; justify-content: space-between; margin-bottom: 0.5rem;">
+                    <span style="font-size: 0.875rem; color: #6b7280;">Aprovado</span>
+                    <span style="font-size: 0.875rem; font-weight: 600;">60</span>
+                </div>
+                <div style="display: flex; justify-content: space-between;">
+                    <span style="font-size: 0.875rem; color: #6b7280;">Rejeitado</span>
+                    <span style="font-size: 0.875rem; font-weight: 600;">40</span>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Resumo de produção anual -->
+        <div class="card">
+            <div class="card-header">
+                <h3 class="card-title">Resumo de produção anual</h3>
+                <button class="btn btn-outline">
+                    <i class="fas fa-ellipsis-h"></i>
+                </button>
+            </div>
+            
+            <div class="chart-container" style="height: 200px; display: flex; align-items: center; justify-content: center; background-color: #f9fafb; border-radius: 0.5rem;">
+                <div style="text-align: center; color: #6b7280;">
+                    <i class="fas fa-chart-bar" style="font-size: 3rem; margin-bottom: 1rem;"></i>
+                    <p>Gráfico de produção anual</p>
+                    <p style="font-size: 0.875rem;">Dados serão carregados em breve</p>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Faturamento total -->
+        <div class="card">
+            <div class="card-header">
+                <h3 class="card-title">Faturamento total</h3>
+                <button class="btn btn-outline">
+                    <i class="fas fa-ellipsis-h"></i>
+                </button>
+            </div>
+            
+            <div style="margin-bottom: 1rem;">
+                <div style="font-size: 1.5rem; font-weight: 700; color: #1f2937;">
+                    {{ "R$ {:,.2f}".format(stats.faturamento_total).replace(',', 'X').replace('.', ',').replace('X', '.') }}
+                </div>
+                <div style="font-size: 0.875rem; color: #10b981;">
+                    <i class="fas fa-arrow-up"></i>
+                    21% vs mês passado
+                </div>
+            </div>
+            
+            <div class="chart-container" style="height: 150px; display: flex; align-items: center; justify-content: center; background-color: #f9fafb; border-radius: 0.5rem;">
+                <div style="text-align: center; color: #6b7280;">
+                    <i class="fas fa-chart-line" style="font-size: 2rem; margin-bottom: 0.5rem;"></i>
+                    <p style="font-size: 0.875rem;">Gráfico de faturamento</p>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Tabelas de informações -->
+    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; margin-top: 2rem;">
+        <!-- Últimas produções -->
+        <div class="card">
+            <div class="card-header">
+                <h3 class="card-title">Últimas produções</h3>
+                <div>
+                    <button class="btn btn-outline" style="margin-right: 0.5rem;">
+                        <i class="fas fa-filter"></i>
+                        Filtrar
+                    </button>
+                    <button class="btn btn-outline">
+                        <i class="fas fa-sort"></i>
+                        Ordenar
+                    </button>
+                </div>
+            </div>
+            
+            <div class="table-container">
+                <table class="data-table">
+                    <thead>
+                        <tr>
+                            <th>S/N</th>
+                            <th>Cliente</th>
+                            <th>Data</th>
+                            <th>Status</th>
+                            <th>Ação</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for producao in ultimas_producoes %}
+                        <tr>
+                            <td>{{ loop.index }}</td>
+                            <td>{{ producao.cliente.nome if producao.cliente else 'N/A' }}</td>
+                            <td>{{ producao.data.strftime('%d/%m/%Y') }}</td>
+                            <td>
+                                {% if producao.status == 'finalizada' %}
+                                    <span class="badge badge-success">Finalizada</span>
+                                {% elif producao.status == 'em_producao' %}
+                                    <span class="badge badge-warning">Em Produção</span>
+                                {% else %}
+                                    <span class="badge badge-info">{{ producao.status.title() }}</span>
+                                {% endif %}
+                            </td>
+                            <td>
+                                <a href="{{ url_for('producao.view', id=producao.id) }}" class="text-info">Ver mais</a>
+                            </td>
+                        </tr>
+                        {% else %}
+                        <tr>
+                            <td colspan="5" style="text-align: center; color: #6b7280;">Nenhuma produção encontrada</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        
+        <!-- Alertas de estoque -->
+        <div class="card">
+            <div class="card-header">
+                <h3 class="card-title">Alertas de estoque</h3>
+                <button class="btn btn-outline">
+                    <i class="fas fa-ellipsis-h"></i>
+                </button>
+            </div>
+            
+            <div class="table-container">
+                <table class="data-table">
+                    <thead>
+                        <tr>
+                            <th>S/N</th>
+                            <th>Produto/Material</th>
+                            <th>Estoque</th>
+                            <th>Mínimo</th>
+                            <th>Status</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for item in alertas_estoque %}
+                        <tr>
+                            <td>{{ loop.index }}</td>
+                            <td>{{ item.nome }}</td>
+                            <td>{{ item.estoque_atual }}</td>
+                            <td>{{ item.estoque_minimo }}</td>
+                            <td>
+                                {% if item.estoque_atual <= item.estoque_minimo %}
+                                    <span class="badge badge-danger">Crítico</span>
+                                {% else %}
+                                    <span class="badge badge-warning">Baixo</span>
+                                {% endif %}
+                            </td>
+                        </tr>
+                        {% else %}
+                        <tr>
+                            <td colspan="5" style="text-align: center; color: #6b7280;">Nenhum alerta de estoque</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+.dashboard-container {
+    padding: 0;
+}
+
+.chart-container {
+    position: relative;
+}
+
+@media (max-width: 1024px) {
+    .stats-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+    
+    div[style*="grid-template-columns: 1fr 1fr 1fr"] {
+        grid-template-columns: 1fr !important;
+    }
+    
+    div[style*="grid-template-columns: 1fr 1fr"] {
+        grid-template-columns: 1fr !important;
+    }
+}
+</style>
+{% endblock %}
+
+{% block extra_css %}
+<style>
+.alert {
+    padding: 0.75rem 1rem;
+    border-radius: 0.5rem;
+    margin-bottom: 1rem;
+    position: relative;
+}
+
+.alert-success {
+    background-color: #f0fdf4;
+    color: #166534;
+    border: 1px solid #bbf7d0;
+}
+
+.alert-danger {
+    background-color: #fef2f2;
+    color: #dc2626;
+    border: 1px solid #fecaca;
+}
+
+.alert-warning {
+    background-color: #fffbeb;
+    color: #d97706;
+    border: 1px solid #fed7aa;
+}
+
+.alert-info {
+    background-color: #eff6ff;
+    color: #2563eb;
+    border: 1px solid #bfdbfe;
+}
+
+.alert-close {
+    position: absolute;
+    top: 0.5rem;
+    right: 0.5rem;
+    background: none;
+    border: none;
+    cursor: pointer;
+    color: inherit;
+    opacity: 0.7;
+}
+
+.alert-close:hover {
+    opacity: 1;
+}
+</style>
+{% endblock %}
+

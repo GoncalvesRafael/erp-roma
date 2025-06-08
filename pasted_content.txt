@@ -1,0 +1,117 @@
+VISÃO GERAL
+	•	Nome do Sistema: ERP ROMA
+	•	Objetivo: Centralizar, automatizar e sincronizar todas as operações da fábrica (produção, estoque, finanças, cadastro de clientes/produtos, emissão fiscal, relatórios e gestão)
+	•	Tecnologia: Python (Flask), MySQL, SQLAlchemy, TailwindCSS, HTML5
+	•	Interface: Web moderna e intuitiva, acessível via navegador local
+	•	Design: Responsivo, com layout limpo e profissional
+	•	Modelo de acesso: Multiusuário com login e níveis de permissão
+
+⸻
+
+🛠️ ARQUITETURA DO SISTEMA
+	•	Estrutura Modular (Blueprints): Separação por setores (Clientes, Produtos, Produção, Financeiro, Estoque etc.)
+	•	Banco de Dados Unificado: Todas as tabelas interligadas via chaves primárias e relacionamentos (ORM SQLAlchemy)
+	•	Funcionamento Local: Sistema roda no navegador via servidor local Flask
+	•	Backup automático: Sincronização periódica do banco de dados com pasta do iCloud no Mac
+	•	Aplicativo para Mac: Versão empacotada em .app para execução direta em macOS
+
+⸻
+
+🔐 ACESSOS E PERMISSÕES
+	•	Login com autenticação segura e sessões protegidas
+	•	Níveis de permissão:
+	•	Administrador: acesso total ao sistema, incluindo emissão de NF-e e configurações
+	•	Gestor: controle de produção, estoque e cadastros
+	•	Visualizador: acesso apenas leitura
+
+⸻
+
+📦 MÓDULOS DO ERP
+
+👤 Usuários
+	•	Cadastro, edição, redefinição de senha
+	•	Permissões por tipo de usuário
+
+👥 Clientes
+	•	Cadastro completo: nome, CNPJ, endereço, e-mail, telefone
+	•	Vinculação com pedidos, produção e nota fiscal
+
+🧾 Notas Fiscais
+	•	Geração de notas vinculadas aos pedidos
+	•	Integração total com API do Bling:
+	•	Envio automático dos dados
+	•	Retorno de status da nota (emitida, erro, pendente)
+
+📦 Produtos
+	•	Cadastro com:
+	•	Modelo, descrição, código, custo unitário, preço mínimo
+	•	Composição de materiais (porcentagem ou unidade por produto)
+	•	Estoque atual e estoque mínimo com alerta automático
+	•	Ligação direta com produção, estoque e vendas
+
+🧵 Produção
+	•	Registro por data, cliente, modelo, produto e quantidade
+	•	Cálculo automático do valor total
+	•	Atualiza automaticamente o estoque do produto
+	•	Deduz materiais utilizados com base na composição
+	•	Relatórios mensais com exportação em PDF
+
+🧮 Estoque de Materiais
+	•	Entradas e saídas de materiais (tecidos, aviamentos etc.)
+	•	Atualização automática via produção
+	•	Consulta e ajuste manual quinzenal (view dedicada)
+	•	Alerta quando atingir estoque mínimo por material
+
+📉 Consumo de Materiais
+	•	Análise automática de consumo com base na produção registrada
+	•	Relatórios mensais, trimestrais e semestrais
+	•	Ajuda na previsão de compra e controle de custo por produto
+
+📑 Fluxo de Caixa
+	•	Cadastro de movimentações com:
+	•	Data, descrição, tipo (entrada/saída), valor, categoria
+	•	Categorias: CUSTO, INSUMO, FUNCIONÁRIO, EXPEDIÇÃO, IMPOSTO
+	•	Relatórios por período (mensal ou personalizado)
+	•	Relatórios de custos e movimentações exportáveis
+	•	Envio por e-mail à contadora
+
+🤝 Fornecedores
+	•	Cadastro com nome, CNPJ, contato e produtos fornecidos
+	•	Ligação com entradas de insumos e histórico de compras
+	•	Suporte à rastreabilidade de material por fornecedor
+
+⸻
+
+📊 DASHBOARD INTELIGENTE
+	•	Visualização dinâmica com filtros por período
+	•	Indicadores principais:
+	•	Total de vendas
+	•	Total de despesas
+	•	Lucro total
+	•	Top 3 produtos mais vendidos
+	•	Gráfico de vendas por mês
+	•	Projeção de vendas para próximos 3 e 6 meses
+	•	Integração com dados de produção e fluxo de caixa
+
+⸻
+
+💾 BACKUP E SEGURANÇA
+	•	Backup automático diário sincronizado com o iCloud (Mac)
+	•	Proteção contra injeção de dados e CSRF
+	•	Validação de entrada em todos os formulários
+	•	Logs de ações críticas dos usuários (em desenvolvimento futuro)
+
+⸻
+
+🎯 PADRÕES DE QUALIDADE INSPIRADOS NO SAP
+	•	Dados mestres centralizados: Cliente, Produto, Fornecedor
+	•	Módulos sincronizados: alterações refletem em todos os setores
+	•	Integração total entre produção, estoque e finanças
+	•	Validação cruzada: sem registros duplicados, produção inválida ou emissão fiscal sem vínculo
+	•	Relatórios gerenciais padronizados e auditáveis
+
+⸻
+
+🗂️ OBJETIVO FINAL DO SISTEMA
+
+Transformar o ERP ROMA em uma solução robusta, visualmente profissional, acessível localmente e com padrão de dados corporativo – garantindo controle, produtividade e visão estratégica para o crescimento sustentável da Roma Confecções.

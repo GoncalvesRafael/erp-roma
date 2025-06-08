@@ -1,0 +1,210 @@
+{% extends "base.html" %}
+
+{% block title %}Usuários{% endblock %}
+{% block page_title %}Usuários{% endblock %}
+
+{% block content %}
+<div class="card">
+    <div class="card-header">
+        <h3 class="card-title">Gerenciar Usuários</h3>
+        <div>
+            <a href="{{ url_for('usuarios.novo') }}" class="btn btn-primary">
+                <i class="fas fa-plus btn-icon"></i>
+                Novo Usuário
+            </a>
+        </div>
+    </div>
+    
+    <!-- Filtros -->
+    <div class="p-4 border-b">
+        <form method="GET" class="flex gap-4 items-end">
+            <div class="flex-1">
+                <label class="form-label">Buscar</label>
+                <input type="text" name="search" value="{{ search }}" 
+                       class="form-control" placeholder="Nome ou e-mail...">
+            </div>
+            
+            <div>
+                <button type="submit" class="btn btn-outline">
+                    <i class="fas fa-search btn-icon"></i>
+                    Buscar
+                </button>
+            </div>
+            
+            {% if search %}
+            <div>
+                <a href="{{ url_for('usuarios.index') }}" class="btn btn-outline">
+                    <i class="fas fa-times btn-icon"></i>
+                    Limpar
+                </a>
+            </div>
+            {% endif %}
+        </form>
+    </div>
+    
+    <!-- Tabela -->
+    <div class="table-container">
+        <table class="data-table">
+            <thead>
+                <tr>
+                    <th>Nome</th>
+                    <th>E-mail</th>
+                    <th>Tipo</th>
+                    <th>Status</th>
+                    <th>Cadastro</th>
+                    <th>Ações</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for usuario in usuarios.items %}
+                <tr>
+                    <td>
+                        <div class="flex items-center">
+                            <i class="fas fa-user-circle text-gray-400 mr-2"></i>
+                            {{ usuario.nome }}
+                        </div>
+                    </td>
+                    <td>{{ usuario.email }}</td>
+                    <td>
+                        {% if usuario.tipo == 'administrador' %}
+                            <span class="badge badge-danger">Administrador</span>
+                        {% elif usuario.tipo == 'gestor' %}
+                            <span class="badge badge-warning">Gestor</span>
+                        {% else %}
+                            <span class="badge badge-info">Visualizador</span>
+                        {% endif %}
+                    </td>
+                    <td>
+                        {% if usuario.ativo %}
+                            <span class="badge badge-success">Ativo</span>
+                        {% else %}
+                            <span class="badge badge-danger">Inativo</span>
+                        {% endif %}
+                    </td>
+                    <td>{{ usuario.data_cadastro.strftime('%d/%m/%Y') }}</td>
+                    <td>
+                        <div class="flex gap-2">
+                            <a href="{{ url_for('usuarios.view', id=usuario.id) }}" 
+                               class="text-info" data-tooltip="Visualizar">
+                                <i class="fas fa-eye"></i>
+                            </a>
+                            
+                            <a href="{{ url_for('usuarios.editar', id=usuario.id) }}" 
+                               class="text-warning" data-tooltip="Editar">
+                                <i class="fas fa-edit"></i>
+                            </a>
+                            
+                            {% if usuario.id != current_user.id %}
+                            <button onclick="toggleStatus({{ usuario.id }}, {{ usuario.ativo|lower }})" 
+                                    class="text-secondary border-0 bg-transparent" 
+                                    data-tooltip="{% if usuario.ativo %}Desativar{% else %}Ativar{% endif %}">
+                                <i class="fas fa-{% if usuario.ativo %}pause{% else %}play{% endif %}"></i>
+                            </button>
+                            
+                            <button onclick="excluirUsuario({{ usuario.id }}, '{{ usuario.nome }}')" 
+                                    class="text-danger border-0 bg-transparent" 
+                                    data-tooltip="Excluir">
+                                <i class="fas fa-trash"></i>
+                            </button>
+                            {% endif %}
+                        </div>
+                    </td>
+                </tr>
+                {% else %}
+                <tr>
+                    <td colspan="6" class="text-center text-gray-500">
+                        {% if search %}
+                            Nenhum usuário encontrado para "{{ search }}".
+                        {% else %}
+                            Nenhum usuário cadastrado.
+                        {% endif %}
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    
+    <!-- Paginação -->
+    {% if usuarios.pages > 1 %}
+    <div class="p-4 border-t">
+        <div class="flex justify-between items-center">
+            <div class="text-sm text-gray-500">
+                Mostrando {{ usuarios.per_page * (usuarios.page - 1) + 1 }} a 
+                {{ usuarios.per_page * usuarios.page if usuarios.page < usuarios.pages else usuarios.total }} 
+                de {{ usuarios.total }} usuários
+            </div>
+            
+            <div class="flex gap-2">
+                {% if usuarios.has_prev %}
+                    <a href="{{ url_for('usuarios.index', page=usuarios.prev_num, search=search) }}" 
+                       class="btn btn-outline">Anterior</a>
+                {% endif %}
+                
+                {% for page_num in usuarios.iter_pages() %}
+                    {% if page_num %}
+                        {% if page_num != usuarios.page %}
+                            <a href="{{ url_for('usuarios.index', page=page_num, search=search) }}" 
+                               class="btn btn-outline">{{ page_num }}</a>
+                        {% else %}
+                            <span class="btn btn-primary">{{ page_num }}</span>
+                        {% endif %}
+                    {% else %}
+                        <span class="btn btn-outline">...</span>
+                    {% endif %}
+                {% endfor %}
+                
+                {% if usuarios.has_next %}
+                    <a href="{{ url_for('usuarios.index', page=usuarios.next_num, search=search) }}" 
+                       class="btn btn-outline">Próximo</a>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+    {% endif %}
+</div>
+
+<!-- Formulário oculto para exclusão -->
+<form id="form-excluir" method="POST" style="display: none;">
+    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+</form>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+function toggleStatus(userId, isActive) {
+    const action = isActive ? 'desativar' : 'ativar';
+    
+    if (confirm(`Tem certeza que deseja ${action} este usuário?`)) {
+        fetch(`/usuarios/${userId}/toggle-status`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRFToken': document.querySelector('input[name="csrf_token"]').value
+            }
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                location.reload();
+            } else {
+                alert(data.message);
+            }
+        })
+        .catch(error => {
+            console.error('Erro:', error);
+            alert('Erro ao alterar status do usuário.');
+        });
+    }
+}
+
+function excluirUsuario(userId, userName) {
+    if (confirm(`Tem certeza que deseja excluir o usuário "${userName}"?\n\nEsta ação não pode ser desfeita.`)) {
+        const form = document.getElementById('form-excluir');
+        form.action = `/usuarios/${userId}/excluir`;
+        form.submit();
+    }
+}
+</script>
+{% endblock %}
+

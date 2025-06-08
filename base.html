@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}ERP ROMA{% endblock %} - Roma Confecções</title>
+    
+    <!-- Favicon -->
+    <link rel="icon" type="image/png" href="{{ url_for('static', filename='img/icon_Roma.png') }}">
+    
+    <!-- CSS -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    
+    <!-- Font Awesome para ícones -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    
+    {% block extra_css %}{% endblock %}
+</head>
+<body>
+    <div class="app-container">
+        <!-- Sidebar -->
+        <nav class="sidebar" id="sidebar">
+            <div class="sidebar-header">
+                <img src="{{ url_for('static', filename='img/new_logo_roma.png') }}" alt="Roma Confecções" class="sidebar-logo">
+            </div>
+            
+            <div class="sidebar-menu">
+                <a href="{{ url_for('main.dashboard') }}" class="sidebar-item {% if request.endpoint == 'main.dashboard' %}active{% endif %}">
+                    <i class="fas fa-chart-pie sidebar-icon"></i>
+                    Dashboard
+                </a>
+                
+                <a href="{{ url_for('usuarios.index') }}" class="sidebar-item {% if request.endpoint.startswith('usuarios') %}active{% endif %}">
+                    <i class="fas fa-users sidebar-icon"></i>
+                    Usuários
+                </a>
+                
+                <a href="{{ url_for('clientes.index') }}" class="sidebar-item {% if request.endpoint.startswith('clientes') %}active{% endif %}">
+                    <i class="fas fa-building sidebar-icon"></i>
+                    Clientes
+                </a>
+                
+                <a href="{{ url_for('produtos.index') }}" class="sidebar-item {% if request.endpoint.startswith('produtos') %}active{% endif %}">
+                    <i class="fas fa-box sidebar-icon"></i>
+                    Produtos
+                </a>
+                
+                <a href="{{ url_for('fornecedores.index') }}" class="sidebar-item {% if request.endpoint.startswith('fornecedores') %}active{% endif %}">
+                    <i class="fas fa-truck sidebar-icon"></i>
+                    Fornecedores
+                </a>
+                
+                <a href="{{ url_for('estoque.index') }}" class="sidebar-item {% if request.endpoint.startswith('estoque') %}active{% endif %}">
+                    <i class="fas fa-warehouse sidebar-icon"></i>
+                    Estoque
+                </a>
+                
+                <a href="{{ url_for('producao.index') }}" class="sidebar-item {% if request.endpoint.startswith('producao') %}active{% endif %}">
+                    <i class="fas fa-industry sidebar-icon"></i>
+                    Produção
+                </a>
+                
+                <a href="{{ url_for('dashboard.index') }}" class="sidebar-item {% if request.endpoint.startswith('dashboard') %}active{% endif %}">
+                    <i class="fas fa-chart-line sidebar-icon"></i>
+                    Dashboard
+                </a>
+                
+                <a href="{{ url_for('dashboard.relatorios') }}" class="sidebar-item {% if request.endpoint.startswith('dashboard.relatorio') %}active{% endif %}">
+                    <i class="fas fa-chart-bar sidebar-icon"></i>
+                    Relatórios
+                </a>
+                
+                {% if current_user.perfil == 'administrador' %}
+                <a href="{{ url_for('admin.index') }}" class="sidebar-item {% if request.endpoint.startswith('admin') %}active{% endif %}">
+                    <i class="fas fa-cog sidebar-icon"></i>
+                    Administração
+                </a>
+                {% endif %}
+            </div>
+        </nav>
+        
+        <!-- Conteúdo principal -->
+        <div class="main-content">
+            <!-- Header -->
+            <header class="header">
+                <div class="header-left">
+                    <h1 class="page-title">{% block page_title %}Dashboard{% endblock %}</h1>
+                </div>
+                
+                <div class="header-right">
+                    <div class="user-profile">
+                        {% if current_user.is_authenticated %}
+                            <div class="user-avatar">
+                                <i class="fas fa-user-circle" style="font-size: 36px; color: #6b7280;"></i>
+                            </div>
+                            <div class="user-info">
+                                <div class="user-name">{{ current_user.nome }}</div>
+                                <div class="user-role">{{ current_user.tipo.title() }}</div>
+                            </div>
+                            <div style="margin-left: 1rem;">
+                                <a href="{{ url_for('auth.logout') }}" class="btn btn-outline">
+                                    <i class="fas fa-sign-out-alt btn-icon"></i>
+                                    Sair
+                                </a>
+                            </div>
+                        {% endif %}
+                    </div>
+                </div>
+            </header>
+            
+            <!-- Mensagens flash -->
+            {% with messages = get_flashed_messages(with_categories=true) %}
+                {% if messages %}
+                    <div class="flash-messages">
+                        {% for category, message in messages %}
+                            <div class="alert alert-{{ category }}">
+                                {{ message }}
+                                <button type="button" class="alert-close" onclick="this.parentElement.style.display='none'">
+                                    <i class="fas fa-times"></i>
+                                </button>
+                            </div>
+                        {% endfor %}
+                    </div>
+                {% endif %}
+            {% endwith %}
+            
+            <!-- Conteúdo da página -->
+            <main>
+                {% block content %}{% endblock %}
+            </main>
+        </div>
+    </div>
+    
+    <!-- JavaScript -->
+    <script src="{{ url_for('static', filename='js/app.js') }}"></script>
+    {% block extra_js %}{% endblock %}
+</body>
+</html>
+

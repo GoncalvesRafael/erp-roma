@@ -1,0 +1,62 @@
+{% extends "base.html" %}
+
+{% block title %}Alterar Senha{% endblock %}
+{% block page_title %}Alterar Senha{% endblock %}
+
+{% block content %}
+<div class="card" style="max-width: 500px; margin: 0 auto;">
+    <div class="card-header">
+        <h3 class="card-title">Alterar Senha</h3>
+    </div>
+    
+    <form method="POST" class="p-4">
+        {{ form.hidden_tag() }}
+        
+        <div class="form-group">
+            {{ form.senha_atual.label(class="form-label") }}
+            {{ form.senha_atual(class="form-control", placeholder="Sua senha atual") }}
+            {% if form.senha_atual.errors %}
+                <div class="text-danger mt-1">
+                    {% for error in form.senha_atual.errors %}
+                        {{ error }}
+                    {% endfor %}
+                </div>
+            {% endif %}
+        </div>
+        
+        <div class="form-group">
+            {{ form.nova_senha.label(class="form-label") }}
+            {{ form.nova_senha(class="form-control", placeholder="Nova senha") }}
+            {% if form.nova_senha.errors %}
+                <div class="text-danger mt-1">
+                    {% for error in form.nova_senha.errors %}
+                        {{ error }}
+                    {% endfor %}
+                </div>
+            {% endif %}
+        </div>
+        
+        <div class="form-group">
+            {{ form.confirmar_senha.label(class="form-label") }}
+            {{ form.confirmar_senha(class="form-control", placeholder="Confirme a nova senha") }}
+            {% if form.confirmar_senha.errors %}
+                <div class="text-danger mt-1">
+                    {% for error in form.confirmar_senha.errors %}
+                        {{ error }}
+                    {% endfor %}
+                </div>
+            {% endif %}
+        </div>
+        
+        <div class="mt-4 flex justify-between">
+            <a href="{{ url_for('main.dashboard') }}" class="btn btn-outline">
+                <i class="fas fa-arrow-left btn-icon"></i>
+                Cancelar
+            </a>
+            
+            {{ form.submit(class="btn btn-primary") }}
+        </div>
+    </form>
+</div>
+{% endblock %}
+
